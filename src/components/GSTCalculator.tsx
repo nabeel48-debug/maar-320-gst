@@ -9,12 +9,16 @@ const GSTCalculator = () => {
     amountWithoutGST: 0,
     weightInKG: 0,
     kgMultiplied: 0,
+    cgstAmount: 0,
+    sgstAmount: 0,
     finalGST: 0,
   });
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    const gstRate = 0.12;
+    const gstRate = 0.05; // 5% total GST
+    const cgstRate = 0.025; // 2.5% CGST
+    const sgstRate = 0.025; // 2.5% SGST
     const divisionValue = 300;
 
     const amountReceived = parseFloat(amount);
@@ -25,13 +29,17 @@ const GSTCalculator = () => {
       const amountWithoutGST = amountReceived / (1 + gstRate);
       const weightInKG = amountWithoutGST / divisionValue;
       const kgMultiplied = weightInKG * divisionValue;
-      const finalGST = (kgMultiplied * gstRate) + kgMultiplied;
+      const cgstAmount = kgMultiplied * cgstRate;
+      const sgstAmount = kgMultiplied * sgstRate;
+      const finalGST = kgMultiplied + cgstAmount + sgstAmount;
 
       setTimeout(() => {
         setResults({
           amountWithoutGST,
           weightInKG,
           kgMultiplied,
+          cgstAmount,
+          sgstAmount,
           finalGST,
         });
         setIsAnimating(false);
@@ -41,6 +49,8 @@ const GSTCalculator = () => {
         amountWithoutGST: 0,
         weightInKG: 0,
         kgMultiplied: 0,
+        cgstAmount: 0,
+        sgstAmount: 0,
         finalGST: 0,
       });
     }
@@ -73,7 +83,7 @@ const GSTCalculator = () => {
 
             <div className="space-y-4 pt-4 border-t">
               <div className="flex justify-between items-center text-base">
-                <span className="text-foreground">Subtract GST (12%):</span>
+                <span className="text-foreground">Subtract GST (5%):</span>
                 <span 
                   className={`font-bold text-primary min-w-[100px] text-right transition-opacity duration-300 ${
                     isAnimating ? "opacity-0" : "opacity-100"
@@ -107,9 +117,31 @@ const GSTCalculator = () => {
                 </span>
               </div>
 
+              <div className="flex justify-between items-center text-base">
+                <span className="text-foreground">CGST (2.5%):</span>
+                <span 
+                  className={`font-bold text-primary min-w-[100px] text-right transition-opacity duration-300 ${
+                    isAnimating ? "opacity-0" : "opacity-100"
+                  }`}
+                >
+                  ₹{results.cgstAmount.toFixed(2)}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center text-base">
+                <span className="text-foreground">SGST (2.5%):</span>
+                <span 
+                  className={`font-bold text-primary min-w-[100px] text-right transition-opacity duration-300 ${
+                    isAnimating ? "opacity-0" : "opacity-100"
+                  }`}
+                >
+                  ₹{results.sgstAmount.toFixed(2)}
+                </span>
+              </div>
+
               <div className="flex justify-between items-center text-base pt-2 border-t">
                 <span className="text-foreground font-semibold">
-                  Total (incl. 12% GST):
+                  Total (incl. 2.5% CGST + 2.5% SGST):
                 </span>
                 <span 
                   className={`font-bold text-primary text-lg min-w-[100px] text-right transition-opacity duration-300 ${
