@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import maarLogo from "@/assets/maar-logo.png";
 
 const GSTCalculator = () => {
   const [amount, setAmount] = useState<string>("");
@@ -58,10 +59,13 @@ const GSTCalculator = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <nav className="bg-primary text-primary-foreground py-4 px-6 shadow-md">
-        <h1 className="text-2xl md:text-3xl font-bold text-center">
-          M.A.A.R Metals GST Calculator
-        </h1>
+      <nav className="bg-primary text-primary-foreground py-3 px-6 shadow-md">
+        <div className="flex items-center justify-center gap-3">
+          <img src={maarLogo} alt="M.A.A.R Metals Logo" className="h-10 w-10 rounded" />
+          <h1 className="text-xl md:text-2xl font-bold">
+            M.A.A.R Metals GST Calculator
+          </h1>
+        </div>
       </nav>
 
       <div className="flex-1 flex items-center justify-center p-4 md:p-8">
