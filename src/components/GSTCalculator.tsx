@@ -19,7 +19,7 @@ const GSTCalculator = () => {
     const gstRate = 0.05; // 5% total GST
     const cgstRate = 0.025; // 2.5% CGST
     const sgstRate = 0.025; // 2.5% SGST
-    const divisionValue = 300;
+    const divisionValue = 320;
 
     const amountReceived = parseFloat(amount);
 
@@ -95,7 +95,7 @@ const GSTCalculator = () => {
 
               <div className="flex justify-between items-center text-base bg-accent p-3 rounded-lg">
                 <span className="text-accent-foreground font-medium">
-                  Divide by 300:
+                  Divide by 320:
                 </span>
                 <span 
                   className={`font-bold text-primary min-w-[100px] text-right transition-opacity duration-300 ${
@@ -107,7 +107,7 @@ const GSTCalculator = () => {
               </div>
 
               <div className="flex justify-between items-center text-base">
-                <span className="text-foreground">KG value × 300:</span>
+                <span className="text-foreground">KG value × 320:</span>
                 <span 
                   className={`font-bold text-primary min-w-[100px] text-right transition-opacity duration-300 ${
                     isAnimating ? "opacity-0" : "opacity-100"
