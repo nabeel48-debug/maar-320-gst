@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <title>M.A.A.R Metals GST Calculator</title>
+  <meta name="description" content="Professional GST calculator for M.A.A.R Metals with real-time CGST and SGST calculations" />
+  <meta name="theme-color" content="#16a34a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      background-color: #16a34a;
+      color: white;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    nav h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      nav h1 {
+        font-size: 1.875rem;
+      }
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        padding: 2rem;
+      }
+    }
+
+    .card {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 28rem;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @media (min-width: 768px) {
+      .card {
+        padding: 2rem;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 1.125rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #1f2937;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1.125rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    input:focus {
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+    }
+
+    input::placeholder {
+      color: #9ca3af;
+    }
+
+    .results {
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      font-size: 1rem;
+    }
+
+    .result-row span:first-child {
+      color: #374151;
+    }
+
+    .result-value {
+      font-weight: 700;
+      color: #16a34a;
+      min-width: 100px;
+      text-align: right;
+      transition: opacity 0.3s;
+    }
+
+    .result-row.highlight {
+      background-color: #f0fdf4;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      margin: 0.25rem -0.75rem;
+    }
+
+    .result-row.highlight span:first-child {
+      color: #166534;
+      font-weight: 500;
+    }
+
+    .result-row.total {
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 0.5rem;
+    }
+
+    .result-row.total span:first-child {
+      font-weight: 600;
+    }
+
+    .result-row.total .result-value {
+      font-size: 1.125rem;
+    }
+
+    .animating {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>M.A.A.R Metals GST Calculator</h1>
+  </nav>
+
+  <div class="container">
+    <div class="card">
+      <div class="form-group">
+        <label for="amount">Amount Received:</label>
+        <input 
+          type="number" 
+          id="amount" 
+          placeholder="Enter amount"
+          oninput="calculateGST()"
+        />
+      </div>
+
+      <div class="results">
+        <div class="result-row">
+          <span>Subtract GST (5%):</span>
+          <span class="result-value" id="amountWithoutGST">₹0.00</span>
+        </div>
+
+        <div class="result-row highlight">
+          <span>Divide by 320:</span>
+          <span class="result-value" id="weightInKG">0.00 KG</span>
+        </div>
+
+        <div class="result-row">
+          <span>KG value × 320:</span>
+          <span class="result-value" id="kgMultiplied">₹0.00</span>
+        </div>
+
+        <div class="result-row">
+          <span>CGST (2.5%):</span>
+          <span class="result-value" id="cgstAmount">₹0.00</span>
+        </div>
+
+        <div class="result-row">
+          <span>SGST (2.5%):</span>
+          <span class="result-value" id="sgstAmount">₹0.00</span>
+        </div>
+
+        <div class="result-row total">
+          <span>Total (incl. 2.5% CGST + 2.5% SGST):</span>
+          <span class="result-value" id="finalGST">₹0.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calculateGST() {
+      const gstRate = 0.05;
+      const cgstRate = 0.025;
+      const sgstRate = 0.025;
+      const divisionValue = 320;
+
+      const amountInput = document.getElementById('amount');
+      const amountReceived = parseFloat(amountInput.value);
+
+      const elements = document.querySelectorAll('.result-value');
+      elements.forEach(el => el.classList.add('animating'));
+
+      setTimeout(() => {
+        if (!isNaN(amountReceived) && amountReceived > 0) {
+          const amountWithoutGST = amountReceived / (1 + gstRate);
+          const weightInKG = amountWithoutGST / divisionValue;
+          const kgMultiplied = weightInKG * divisionValue;
+          const cgstAmount = kgMultiplied * cgstRate;
+          const sgstAmount = kgMultiplied * sgstRate;
+          const finalGST = kgMultiplied + cgstAmount + sgstAmount;
+
+          document.getElementById('amountWithoutGST').textContent = '₹' + amountWithoutGST.toFixed(2);
+          document.getElementById('weightInKG').textContent = weightInKG.toFixed(2) + ' KG';
+          document.getElementById('kgMultiplied').textContent = '₹' + kgMultiplied.toFixed(2);
+          document.getElementById('cgstAmount').textContent = '₹' + cgstAmount.toFixed(2);
+          document.getElementById('sgstAmount').textContent = '₹' + sgstAmount.toFixed(2);
+          document.getElementById('finalGST').textContent = '₹' + finalGST.toFixed(2);
+        } else {
+          document.getElementById('amountWithoutGST').textContent = '₹0.00';
+          document.getElementById('weightInKG').textContent = '0.00 KG';
+          document.getElementById('kgMultiplied').textContent = '₹0.00';
+          document.getElementById('cgstAmount').textContent = '₹0.00';
+          document.getElementById('sgstAmount').textContent = '₹0.00';
+          document.getElementById('finalGST').textContent = '₹0.00';
+        }
+
+        elements.forEach(el => el.classList.remove('animating'));
+      }, 150);
+    }
+  </script>
+</body>
+</html>
